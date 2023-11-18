@@ -5,8 +5,8 @@ class Character:
         self.appearance = 'circle'
         self.state = None
         self.position = np.array([width/2 - 20, height/2 - 20, width/2 + 20, height/2 + 20])
-        # 총알 발사를 위한 캐릭터 중앙 점 추가
-        self.center = np.array([(self.position[0] + self.position[2]) / 2, (self.position[1] + self.position[3]) / 2])
+        # 총알 발사를 위한 캐릭터 오른쪽 점 추가
+        self.center = np.array([self.position[2], (self.position[1] + self.position[3]) / 2])
         self.outline = "#FFFFFF"
 
     def move(self, command = None):
@@ -34,5 +34,5 @@ class Character:
                 self.position[0] += 5
                 self.position[2] += 5
                 
-        #center update
-        self.center = np.array([(self.position[0] + self.position[2]) / 2, (self.position[1] + self.position[3]) / 2]) 
+        #right update
+        self.center = np.array([self.position[2], (self.position[1] + self.position[3]) / 2])
