@@ -16,7 +16,7 @@ def main():
     my_draw.rectangle((0, 0, joystick.width, joystick.height), fill=(255, 0, 0, 100))
     joystick.disp.image(my_image)
     # 잔상이 남지 않는 코드 & 대각선 이동 가능
-    my_circle = Character(joystick.width, joystick.height)
+    my_circle = Character(240,360)
     my_draw.rectangle((0, 0, joystick.width, joystick.height), fill = (255, 255, 255, 100))
     enemy_1 = Enemy((120, 50))
     enemy_2 = Enemy((25, 50))
@@ -59,6 +59,7 @@ def main():
         
         for enemy in enemys_list:
             if enemy.state != 'die':
+                enemy.move()
                 my_draw.ellipse(tuple(enemy.position), outline = enemy.outline, fill = (255, 0, 0))
 
         for bullet in bullets:
