@@ -34,3 +34,4 @@ class Enemy:
         # Update the enemy's position
         self.position = np.array([new_x - self.radius, new_y - self.radius, new_x + self.radius, new_y + self.radius])
         self.center = np.array([(self.position[0] + self.position[2]) / 2, (self.position[1] + self.position[3]) / 2])
+
