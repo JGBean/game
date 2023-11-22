@@ -1,37 +1,39 @@
 import numpy as np
+from PIL import ImageDraw, ImageFont, Image
 import random
 
 class Enemy:
     def __init__(self, spawn_position):
         self.appearance = 'circle'
         self.state = 'alive'
-        self.radius = 25
-        self.position = np.array([spawn_position[0] - self.radius, spawn_position[1] - self.radius, spawn_position[0] + self.radius, spawn_position[1] + self.radius])
+        self.position = np.array([spawn_position[0] - 20, spawn_position[1] - 20, spawn_position[0] + 10, spawn_position[1] + 10])
         self.center = np.array([(self.position[0] + self.position[2]) / 2, (self.position[1] + self.position[3]) / 2])
         self.outline = "#00FF00"
-        self.speed = 1
+        self.speed = 5
+        self.drawmob = Image.open('/home/jeon7263/game/res/gstand.gif').resize((30, 30))
+
+
     
+
     def move(self):
-        # Calculate a random offset in the range of -5 to 5 for both x and y
-        offset_x = np.random.uniform(-5, 5)
-        offset_y = np.random.uniform(-5, 5)
+        # Generate a random direction vector
+        direction = np.random.uniform(-1, 1, 2)
+        direction /= np.linalg.norm(direction)  # Normalize the direction vector
 
-        # Calculate the new x and y positions
-        new_x = self.center[0] + offset_x
-        new_y = self.center[1] + offset_y
+        # Update the position based on the random direction
+        self.position[0] += direction[0] * self.speed
+        self.position[1] += direction[1] * self.speed
+        self.position[2] += direction[0] * self.speed
+        self.position[3] += direction[1] * self.speed
 
-        # Check if the new position is outside the screen boundaries
-        if new_x - self.radius < 0:
-            new_x = self.radius
-        elif new_x + self.radius > 240:
-            new_x = 240 - self.radius
+        # Ensure the object stays within the screen boundaries
+        self.position[0] = max(1, min(self.position[0], 230))
+        self.position[1] = max(1, min(self.position[1], 230))
+        self.position[2] = max(10, min(self.position[2], 240))
+        self.position[3] = max(10, min(self.position[3], 240))
 
-        if new_y - self.radius < 0:
-            new_y = self.radius
-        elif new_y + self.radius > 240:
-            new_y = 240 - self.radius
-
-        # Update the enemy's position
-        self.position = np.array([new_x - self.radius, new_y - self.radius, new_x + self.radius, new_y + self.radius])
-        self.center = np.array([(self.position[0] + self.position[2]) / 2, (self.position[1] + self.position[3]) / 2])
-
+        # Bounce back when hitting the walls
+        if self.position[0] <= 1 or self.position[2] >= 230:
+            direction[0] *= -1
+        if self.position[1] <= 1 or self.position[3] >= 230:
+            direction[1] *= -1
