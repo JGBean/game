@@ -1,14 +1,15 @@
 import numpy as np
-
+from PIL import ImageDraw, ImageFont, Image
 class Bullet:
     def __init__(self, position, command):
         self.appearance = 'rectangle'
         self.speed = 10
         self.damage = 1
-        self.position = np.array([position[0]-3, position[1]-3, position[0]+3, position[1]+3])
+        self.position = np.array([position[0]-5, position[1]-5, position[0]+5, position[1]+5])
         self.direction = {'up' : False, 'down' : False, 'left' : False, 'right' : False}
         self.state = None
         self.outline = "#0000FF"
+        self.drawsnow = Image.open('/home/jeon7263/game/game/res/snow.png').resize((10,10))
         if command['up_pressed']:
             self.direction['up'] = True
         if command['down_pressed']:
