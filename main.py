@@ -1,43 +1,74 @@
 from PIL import Image, ImageDraw, ImageFont
 import time
 import random
+import os
+import sys
 import numpy as np
 from Enemy import Enemy
 from Bullet import Bullet
 from Character import Character
 from Joystick import Joystick
 
+def restart():
+    os.execl(sys.executable, sys.executable, *sys.argv)
+
 def main():
     rand = random.randint(20, 50)
-    count = 0 
     fnt = ImageFont.truetype("/home/jeon7263/game/game/res/hi.ttf", 20)
     enemy_path = '/home/jeon7263/game/game/res/gstand.gif'
+    enemyslow_path = '/home/jeon7263/game/game/res/gslow.gif'
+    enemydie_path = '/home/jeon7263/game/game/res/gdie.gif'
     player_path = '/home/jeon7263/game/game/res/rstand.gif'
     background_path = '/home/jeon7263/game/game/res/background.gif'
     snow_path = '/home/jeon7263/game/game/res/snow.png'
-
+    lose_path = '/home/jeon7263/game/game/res/lose.gif'
+    win_path = '/home/jeon7263/game/game/res/win.png'
     joystick = Joystick()
     character = Character(joystick.width, joystick.height)
 
     image = Image.new("RGB", (joystick.width, joystick.height))
     draw = ImageDraw.Draw(image)
-    start = Image.open("/home/jeon7263/game/game/res/start.jpeg").resize((240,240))
+    start = Image.open("/home/jeon7263/game/game/res/start.jpeg").resize((240, 240))
     backgroundImage = Image.open(background_path).resize((240, 240))
     playerImage = Image.open(player_path).resize((20,20))
     enemyImage = Image.open(enemy_path).resize((20,20))
+    enemyslowImage = Image.open(enemyslow_path).resize((20,20))
+    enemydieImage = Image.open(enemydie_path).resize((20,20))
     snowImage = Image.open(snow_path).resize((10,10))
     joystick.disp.image(image)
 
     player = Character(joystick.width, joystick.height)
     positionXIndex = [rand, rand+40, rand+80, rand+120]
-
     enemy1 = Enemy((positionXIndex[0], -20))
     enemy2 = Enemy((positionXIndex[1], -20))
     enemy3 = Enemy((positionXIndex[2], -20))
     enemy4 = Enemy((positionXIndex[3], -20))
 
     enemys_list = [enemy1, enemy2, enemy3, enemy4]
+    character_list = [player]
     bullets = []
+    pressed = False
+    joystick.disp.image(start)
+    def Win():
+        ending = Image.open(win_path).resize((240, 240))
+        joystick.disp.image(ending)
+        time.sleep(3)
+        restart()
+
+    def Lose():
+        ending = Image.open(lose_path).resize((240, 240))
+        joystick.disp.image(ending)
+        time.sleep(3)
+        restart()
+
+    joystick.button_A_prev = False
+
+    while True:  
+        if not joystick.button_A.value:
+            pressed=True
+        elif joystick.button_A.value and pressed:
+            pressed=False
+            break
 
     while True:
         command = {'move': False, 'up_pressed': False , 'down_pressed': False, 'left_pressed': False, 'right_pressed': False}
@@ -61,7 +92,7 @@ def main():
         if not joystick.button_A.value: # A pressed
             bullet = Bullet(player.center, command)
             bullets.append(bullet)
-
+            
 
 
         for bullet in bullets:
@@ -70,14 +101,25 @@ def main():
 
         player.move(command)
         image.paste(backgroundImage, (0,0))
-        # draw.ellipse(tuple(player.position), outline = player.outline, fill = (0, 255, 0))
-        image.paste(player.drawplayer, (player.position[0], player.position[1]))  
+        image.paste(player.drawplayer, (player.position[0], player.position[1]))
 
         for enemy in enemys_list:
-            if enemy.state != 'die':
+            if enemy.hp == 2:
                 image.paste(enemy.drawmob, (enemy.position[0], enemy.position[1]))
                 enemy.move()
+            if enemy.hp == 1:
+                image.paste(enemy.drawslow,(enemy.position[0], enemy.position[1]))
+                enemy.move2()
+                time.sleep(0.02)
+            if enemy.hp < 0:
+                image.paste(enemy.drawdie,(enemy.position[0], enemy.position[1]))
+ 
+        print(enemy1.hp,enemy2.hp,enemy3.hp,enemy4.hp)
 
+        if all(enemy.hp <= 0 for enemy in enemys_list):
+            Win()
+        if all(character.hp <= 0 for character in character_list):
+            Lose()
 
         for bullet in bullets:
             if bullet.state != 'hit':

@@ -6,7 +6,8 @@ class Character:
     def __init__(self, width, height):
         self.appearance = 'circle'
         self.state = None
-        self.speed = 5
+        self.speed = 4
+        self.hp = 2
         width = 120
         height = 223
         self.position = np.array([width - 10, height - 10, width + 10, height + 10])
@@ -14,30 +15,22 @@ class Character:
         self.outline = "#FFFFFF"
         self.drawplayer = Image.open('/home/jeon7263/game/game/res/rstand.gif').resize((20, 20))
 
+    def move(self, command):
+        if command['up_pressed']:
+            self.position[1] -= self.speed
+            self.position[3] -= self.speed
 
-    def move(self, command=None):
-        if command['move'] == False:
-            self.state = None
-            self.outline = "#FFFFFF"  # Black color code!
-        else:
-            self.state = 'move'
-            self.outline = "#FF0000"  # Red color code!
+        if command['down_pressed']:
+            self.position[1] += self.speed
+            self.position[3] += self.speed
 
-            if command['left_pressed']:
-                self.position[0] -= self.speed
-                self.position[2] -= self.speed
-
-            if command['right_pressed']:
-                self.position[0] += self.speed
-                self.position[2] += self.speed
-
-            if command['up_pressed']:
-                self.position[1] -= self.speed
-                self.position[3] -= self.speed
-
-            if command['down_pressed']:
-                self.position[1] += self.speed
-                self.position[3] += self.speed
+        if command['left_pressed']:
+            self.position[0] -= self.speed
+            self.position[2] -= self.speed
+            
+        if command['right_pressed']:
+            self.position[0] += self.speed
+            self.position[2] += self.speed
         self.center = np.array([(self.position[0] + self.position[2]) / 2, (self.position[1] + self.position[3]) / 2])
 
         if self.position[0] < 1 or self.position[2] < 1:
