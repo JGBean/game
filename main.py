@@ -8,17 +8,21 @@ from Enemy import Enemy
 from Bullet import Bullet
 from Character import Character
 from Joystick import Joystick
+from Snow import Snow
 
 def restart():
     os.execl(sys.executable, sys.executable, *sys.argv)
 
 def main():
     rand = random.randint(20, 50)
+    count = 0
     fnt = ImageFont.truetype("/home/jeon7263/game/game/res/hi.ttf", 20)
-    enemy_path = '/home/jeon7263/game/game/res/gstand.gif'
-    enemyslow_path = '/home/jeon7263/game/game/res/gslow.gif'
-    enemydie_path = '/home/jeon7263/game/game/res/gdie.gif'
-    player_path = '/home/jeon7263/game/game/res/rstand.gif'
+    enemy_path = '/home/jeon7263/game/game/res/gstand.png'
+    enemyslow_path = '/home/jeon7263/game/game/res/ghit.png'
+    enemydie_path = '/home/jeon7263/game/game/res/gdead.png'
+    player_path = '/home/jeon7263/game/game/res/rstand.png'
+    playerslow_path = '/home/jeon7263/game/game/res/rplayerhit.png'
+    playerdead_path = '/home/jeon7263/game/game/res/rdead.png'
     background_path = '/home/jeon7263/game/game/res/background.gif'
     snow_path = '/home/jeon7263/game/game/res/snow.png'
     lose_path = '/home/jeon7263/game/game/res/lose.gif'
@@ -31,6 +35,8 @@ def main():
     start = Image.open("/home/jeon7263/game/game/res/start.jpeg").resize((240, 240))
     backgroundImage = Image.open(background_path).resize((240, 240))
     playerImage = Image.open(player_path).resize((20,20))
+    playerslowImage = Image.open(playerslow_path).resize((20,20))
+    playerdeadImage = Image.open(playerdead_path).resize((20,20))
     enemyImage = Image.open(enemy_path).resize((20,20))
     enemyslowImage = Image.open(enemyslow_path).resize((20,20))
     enemydieImage = Image.open(enemydie_path).resize((20,20))
@@ -90,18 +96,20 @@ def main():
             command['move'] = True
 
         if not joystick.button_A.value: # A pressed
+            count = count + 1
+        
+        if not joystick.button_B.value and count > 0 and (not joystick.button_R.value or not joystick.button_L.value or not joystick.button_U.value or not joystick.button_D.value):
             bullet = Bullet(player.center, command)
             bullets.append(bullet)
+            count = 0
             
 
-
         for bullet in bullets:
-            bullet.collision_check(enemys_list)
+            bullet.collision_check(enemys_list.copy())
             bullet.move()
+    
 
-        player.move(command)
         image.paste(backgroundImage, (0,0))
-        image.paste(player.drawplayer, (player.position[0], player.position[1]))
 
         for enemy in enemys_list:
             if enemy.hp == 2:
@@ -110,11 +118,19 @@ def main():
             if enemy.hp == 1:
                 image.paste(enemy.drawslow,(enemy.position[0], enemy.position[1]))
                 enemy.move2()
-                time.sleep(0.02)
-            if enemy.hp < 0:
+
+            if enemy.hp == 0:
                 image.paste(enemy.drawdie,(enemy.position[0], enemy.position[1]))
- 
-        print(enemy1.hp,enemy2.hp,enemy3.hp,enemy4.hp)
+
+        for plyaer in character_list:
+            if player.hp == 2:
+                image.paste(player.drawplayer, (player.position[0], player.position[1]))
+                player.move(command)
+            if player.hp == 1:
+                image.paste(player.drawplayerhit, (player.position[0], player.position[1]))
+                player.move2(command)
+            if player.hp == 0:
+                image.paste(player.drawplayerdead, (player.position[0], player.position[1]))
 
         if all(enemy.hp <= 0 for enemy in enemys_list):
             Win()
