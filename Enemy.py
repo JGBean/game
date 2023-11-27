@@ -2,7 +2,7 @@ import numpy as np
 from PIL import ImageDraw, ImageFont, Image
 import random
 from Snow import Snow
-
+import time
 class Enemy:
     def __init__(self, spawn_position):
         self.appearance = 'circle'
@@ -12,10 +12,11 @@ class Enemy:
         self.outline = "#00FF00"
         self.speed = 4
         self.hp = 2
+        self.last_snow_time = 0
         self.drawmob = Image.open('/home/jeon7263/game/game/res/gstand.png').resize((20, 20))
         self.drawslow = Image.open('/home/jeon7263/game/game/res/ghit.png').resize((20,20))
         self.drawdie = Image.open('/home/jeon7263/game/game/res/gdead.png').resize((20,20))
-       
+        
 
     def move(self):
     # Randomly change the position within the speed limits
@@ -80,5 +81,14 @@ class Enemy:
 
   
         self.center = np.array([(self.position[0] + self.position[2]) / 2, (self.position[1] + self.position[3]) / 2])
-
+    
+    def throw_snow(self):
+        current_time = time.time()
+        if current_time - self.last_snow_time >= random.uniform(3,6):
+            self.last_snow_time = current_time
+            snow = Snow(self.center, 'down')  # 눈 객체 생성
+            return snow
+        else:
+            return None
+    
         

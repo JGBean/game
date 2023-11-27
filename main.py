@@ -53,6 +53,7 @@ def main():
     enemys_list = [enemy1, enemy2, enemy3, enemy4]
     character_list = [player]
     bullets = []
+    snows = []
     pressed = False
     joystick.disp.image(start)
     def Win():
@@ -62,7 +63,7 @@ def main():
         restart()
 
     def Lose():
-        ending = Image.open(lose_path).resize((240, 240))
+        ending = Image.open(lose_path).resize((240,240)).convert("RGB")
         joystick.disp.image(ending)
         time.sleep(3)
         restart()
@@ -108,6 +109,9 @@ def main():
             bullet.collision_check(enemys_list.copy())
             bullet.move()
     
+        for snow in snows:
+            snow.collision_check(character_list.copy())
+            snow.move()
 
         image.paste(backgroundImage, (0,0))
 
@@ -115,9 +119,16 @@ def main():
             if enemy.hp == 2:
                 image.paste(enemy.drawmob, (enemy.position[0], enemy.position[1]))
                 enemy.move()
+                snow = enemy.throw_snow()
+                if snow:
+                    snows.append(snow)
+
             if enemy.hp == 1:
                 image.paste(enemy.drawslow,(enemy.position[0], enemy.position[1]))
                 enemy.move2()
+                snow = enemy.throw_snow()
+                if snow:
+                    snows.append(snow)
 
             if enemy.hp == 0:
                 image.paste(enemy.drawdie,(enemy.position[0], enemy.position[1]))
@@ -126,9 +137,11 @@ def main():
             if player.hp == 2:
                 image.paste(player.drawplayer, (player.position[0], player.position[1]))
                 player.move(command)
+        
             if player.hp == 1:
                 image.paste(player.drawplayerhit, (player.position[0], player.position[1]))
                 player.move2(command)
+
             if player.hp == 0:
                 image.paste(player.drawplayerdead, (player.position[0], player.position[1]))
 
@@ -142,6 +155,12 @@ def main():
                 bullet_image = Image.open(snow_path).resize((10, 10))
                 image.paste(bullet_image, (int(bullet.position[0]), int(bullet.position[1]))) 
         joystick.disp.image(image)        
+        
+        for snow in snows:
+            if snow.state != 'hit':
+                snow_image = Image.open(snow_path).resize((10, 10))
+                image.paste(snow_image, (int(snow.position[0]), int(snow.position[1]))) 
+        joystick.disp.image(image)      
 
 if __name__ == '__main__':
     main()

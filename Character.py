@@ -15,7 +15,7 @@ class Character:
         self.outline = "#FFFFFF"
         self.drawplayer = Image.open('/home/jeon7263/game/game/res/rstand.png').resize((20, 20))
         self.drawplayerhit = Image.open('/home/jeon7263/game/game/res/rplayerhit.png').resize((20,20))
-        self.drawplyaerdead = Image.open('/home/jeon7263/game/game/res/rdead.png').resize((20,20))
+        self.drawplayerdead = Image.open('/home/jeon7263/game/game/res/rdead.png').resize((20,20))
 
     def move(self, command):
         if command['up_pressed']:
