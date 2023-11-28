@@ -47,7 +47,6 @@ class Character:
             self.position[1] -= self.speed
             self.position[3] -= self.speed
 
-        # Update the center after the character has moved
         self.center = np.array([(self.position[0] + self.position[2]) / 2, (self.position[1] + self.position[3]) / 2])
 
     def move2(self, command):
@@ -82,5 +81,4 @@ class Character:
             self.position[1] -= self.speed
             self.position[3] -= self.speed
 
-        # Update the center after the character has moved
         self.center = np.array([(self.position[0] + self.position[2]) / 2, (self.position[1] + self.position[3]) / 2])
