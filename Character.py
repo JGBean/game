@@ -6,7 +6,7 @@ class Character:
     def __init__(self, width, height):
         self.appearance = 'circle'
         self.state = None
-        self.speed = 4
+        self.speed = 6
         self.hp = 2
         width = 120
         height = 223

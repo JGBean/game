@@ -10,7 +10,7 @@ class Enemy:
         self.position = np.array([spawn_position[0] - 10, spawn_position[1] - 10, spawn_position[0] + 10, spawn_position[1] + 10])
         self.center = np.array([(self.position[0] + self.position[2]) / 2, (self.position[1] + self.position[3]) / 2])
         self.outline = "#00FF00"
-        self.speed = 4
+        self.speed = 6
         self.hp = 2
         self.last_snow_time = 0
         self.drawmob = Image.open('/home/jeon7263/game/game/res/gstand.png').resize((20, 20))
@@ -84,7 +84,7 @@ class Enemy:
     
     def throw_snow(self):
         current_time = time.time()
-        if current_time - self.last_snow_time >= random.uniform(3,6):
+        if current_time - self.last_snow_time >= random.uniform(2,4):
             self.last_snow_time = current_time
             snow = Snow(self.center, 'down')  # 눈 객체 생성
             return snow
