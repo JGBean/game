@@ -4,7 +4,6 @@ from PIL import ImageDraw, ImageFont, Image
 
 class Character:
     def __init__(self, width, height):
-        self.appearance = 'circle'
         self.state = None
         self.speed = 6
         self.hp = 2
@@ -12,7 +11,6 @@ class Character:
         height = 223
         self.position = np.array([width - 10, height - 10, width + 10, height + 10])
         self.center = np.array([(self.position[0] + self.position[2]) / 2, (self.position[1] + self.position[3]) / 2])
-        self.outline = "#FFFFFF"
         self.drawplayer = Image.open('/home/jeon7263/game/game/res/rstand.png').resize((20, 20))
         self.drawplayerhit = Image.open('/home/jeon7263/game/game/res/rplayerhit.png').resize((20,20))
         self.drawplayerdead = Image.open('/home/jeon7263/game/game/res/rdead.png').resize((20,20))

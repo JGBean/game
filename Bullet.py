@@ -3,7 +3,6 @@ from PIL import ImageDraw, ImageFont, Image
 
 class Bullet:
     def __init__(self, position, command):
-        self.appearance = 'rectangle'
         self.speed = 10
         self.position = np.array([position[0] - 5, position[1] - 5, position[0] + 5, position[1] + 5])
         self.direction = {'up': False, 'down': False, 'left': False, 'right': False}

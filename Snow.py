@@ -3,7 +3,6 @@ from PIL import ImageDraw, ImageFont, Image
 
 class Snow:
     def __init__(self, position, direction):
-        self.appearance = 'rectangle'
         self.speed = 10
         self.position = np.array([position[0] - 5, position[1] - 5, position[0] + 5, position[1] + 5])
         self.direction = direction
