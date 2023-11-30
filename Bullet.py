@@ -7,9 +7,8 @@ class Bullet:
         self.position = np.array([position[0] - 5, position[1] - 5, position[0] + 5, position[1] + 5])
         self.direction = {'up': False, 'down': False, 'left': False, 'right': False}
         self.state = None
-        self.outline = "#0000FF"
         self.collided = False
-        self.collision_range = 10
+        self.collision_range = 12
         self.drawsnow = Image.open('/home/jeon7263/game/game/res/snow.png').resize((10, 10))
         
         if command['up_pressed']:

@@ -3,14 +3,13 @@ from PIL import ImageDraw, ImageFont, Image
 
 class Snow:
     def __init__(self, position, direction):
-        self.speed = 10
-        self.position = position
+        self.speed = 15
+        self.position = position.copy()
         self.direction = direction
         self.state = None
-        self.outline = "#0000FF"
         self.collided = False
         self.drawsnow = Image.open('/home/jeon7263/game/game/res/snow.png').resize((10, 10))
-        self.collision_range = 10  
+        self.collision_range = 12  
 
     def move(self):
         if self.direction == 'down':

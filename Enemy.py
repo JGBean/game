@@ -6,10 +6,9 @@ import time
 class Enemy:
     def __init__(self, spawn_position):
         self.state = 'alive'
-        self.position = np.array([spawn_position[0] - 10, spawn_position[1] - 10, spawn_position[0] + 10, spawn_position[1] + 10])
-        self.center = np.array([(self.position[0] + self.position[2]) / 2, (self.position[1] + self.position[3]) / 2])
-        self.outline = "#00FF00"
-        self.speed = 4
+        self.position = np.array([spawn_position[0], spawn_position[1]])
+        self.center = self.position + np.array([10, 10])
+        self.speed = 8
         self.hp = 2
         self.last_snow_time = 0
         self.drawmob = Image.open('/home/jeon7263/game/game/res/gstand.png').resize((20, 20))
@@ -19,66 +18,25 @@ class Enemy:
 
     def move(self):
         self.position[1] += random.randint(-self.speed, self.speed)
-        self.position[3] += random.randint(-self.speed, self.speed)
-        self.position[2] += random.randint(-self.speed, self.speed)
         self.position[0] += random.randint(-self.speed, self.speed)
 
-        if self.position[0] <= 1:
-            self.position[0] = 1
-            self.position[2] += random.randint(0, self.speed)
-        elif self.position[2] >= 230:
-            self.position[2] = 230
-            self.position[0] -= random.randint(0, self.speed)
+        if self.position[0] <= 5:
+            self.position[0] = 5
+        elif self.position[0] >= 235: 
+            self.position[0] = 235
 
-        if self.position[1] <= 1:
-            self.position[1] = 1
-            self.position[3] += random.randint(0, self.speed)
-        elif self.position[3] >= 230:
-            self.position[3] = 230
-            self.position[1] -= random.randint(0, self.speed)
+        if self.position[1] <= 5:
+            self.position[1] = 5
+        elif self.position[1] >= 120: 
+            self.position[1] = 120
 
-        self.position[0] = max(1, min(self.position[0], 230))
-        self.position[1] = max(1, min(self.position[1], 230))
-        self.position[2] = max(10, min(self.position[2], 240))
-        self.position[3] = max(10, min(self.position[3], 240))
-
-        self.center = np.array([(self.position[0] + self.position[2]) / 2, (self.position[1] + self.position[3]) / 2])
-
-    def move2(self):
-        self.position[1] += random.randint(-self.speed/2, self.speed/2)
-        self.position[3] += random.randint(-self.speed/2, self.speed/2)
-        self.position[2] += random.randint(-self.speed/2, self.speed/2)
-        self.position[0] += random.randint(-self.speed/2, self.speed/2)
-
-        if self.position[0] <= 1:
-            self.position[0] = 1
-            self.position[2] += random.randint(0, self.speed/2)
-        elif self.position[2] >= 230:
-            self.position[2] = 230
-            self.position[0] -= random.randint(0, self.speed/2)
-
-        if self.position[1] <= 1:
-            self.position[1] = 1
-            self.position[3] += random.randint(0, self.speed/2)
-        elif self.position[3] >= 230:
-            self.position[3] = 230
-            self.position[1] -= random.randint(0, self.speed/2)
-
-   
-        self.position[0] = max(1, min(self.position[0], 230))
-        self.position[1] = max(1, min(self.position[1], 120))
-        self.position[2] = max(10, min(self.position[2], 240))
-        self.position[3] = max(10, min(self.position[3], 240))
-
-        self.center = np.array([(self.position[0] + self.position[2]) / 2, (self.position[1] + self.position[3]) / 2])
+        self.center = self.position + np.array([10, 10])
     
     def throw_snow(self):
         current_time = time.time()
-        if current_time - self.last_snow_time >= random.uniform(2,4):
+        if current_time - self.last_snow_time >= random.uniform(1,3):
             self.last_snow_time = current_time
             snow = Snow(self.center, 'down')
             return snow
         
-        else:None
-    
-        
+        else: None

@@ -14,7 +14,6 @@ def restart():
     os.execl(sys.executable, sys.executable, *sys.argv)
 
 def main():
-    rand = random.randint(20, 50)
     count = 0
     fnt = ImageFont.truetype("/home/jeon7263/game/game/res/hi.ttf", 15)
     enemy_path = '/home/jeon7263/game/game/res/gstand.png'
@@ -23,6 +22,7 @@ def main():
     player_path = '/home/jeon7263/game/game/res/rstand.png'
     playerslow_path = '/home/jeon7263/game/game/res/rplayerhit.png'
     playerdead_path = '/home/jeon7263/game/game/res/rdead.png'
+    playersnow_path = '/home/jeon7263/game/game/res/rplayersnow.png'
     background_path = '/home/jeon7263/game/game/res/background.gif'
     snow_path = '/home/jeon7263/game/game/res/snow.png'
     lose_path = '/home/jeon7263/game/game/res/lose.gif'
@@ -39,17 +39,17 @@ def main():
     playerImage = Image.open(player_path).resize((20,20))
     playerslowImage = Image.open(playerslow_path).resize((20,20))
     playerdeadImage = Image.open(playerdead_path).resize((20,20))
+    playersnowImage = Image.open(playersnow_path).resize((20,20))
     enemyImage = Image.open(enemy_path).resize((20,20))
     enemyslowImage = Image.open(enemyslow_path).resize((20,20))
     enemydieImage = Image.open(enemydie_path).resize((20,20))
     snowImage = Image.open(snow_path).resize((10,10))
 
     player = Character(joystick.width, joystick.height)
-    positionXIndex = [rand, rand+40, rand+80, rand+120]
-    enemy1 = Enemy((positionXIndex[0], -20))
-    enemy2 = Enemy((positionXIndex[1], -20))
-    enemy3 = Enemy((positionXIndex[2], -20))
-    enemy4 = Enemy((positionXIndex[3], -20))
+    enemy1 = Enemy((20,40))
+    enemy2 = Enemy((90,40))
+    enemy3 = Enemy((150,40))
+    enemy4 = Enemy((210,40))
 
     enemys_list = [enemy1, enemy2, enemy3, enemy4]
     character_list = [player]
@@ -131,9 +131,9 @@ def main():
 
             if enemy.hp == 1:
                 image.paste(enemy.drawslow,(enemy.position[0], enemy.position[1]))
-                enemy.move2()
+                enemy.speed  = 4
+                enemy.move()
                 snow = enemy.throw_snow()
-
                 if snow:
                     snows.append(snow)
 
@@ -141,13 +141,18 @@ def main():
                 image.paste(enemy.drawdie,(enemy.position[0], enemy.position[1]))
 
         for player in character_list:
-            if player.hp == 2:
+            if player.hp == 2 and count == 0:
                 image.paste(player.drawplayer, (player.position[0], player.position[1]))
                 player.move(command)
-        
+
+            if player.hp == 2 and count > 0:
+                image.paste(player.drawplayersnow, (player.position[0], player.position[1]))
+                player.move(command)
+
             if player.hp == 1:
                 image.paste(player.drawplayerhit, (player.position[0], player.position[1]))
-                player.move2(command)
+                player.speed = 4
+                player.move(command)
 
             if player.hp == 0:
                 image.paste(player.drawplayerdead, (player.position[0], player.position[1]))
@@ -165,7 +170,7 @@ def main():
        
         
         for snow in snows:
-            if snow.state != 'hit':
+            if snow.state != 'hit' and snow.position[1] < 245:
                 snow_image = Image.open(snow_path).resize((10, 10))
                 image.paste(snow_image, (int(snow.position[0]), int(snow.position[1]))) 
         joystick.disp.image(image)      
