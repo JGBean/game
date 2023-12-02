@@ -5,7 +5,7 @@ from PIL import ImageDraw, ImageFont, Image
 class Character:
     def __init__(self, width, height):
         self.state = None
-        self.speed = 8
+        self.speed = 6
         self.hp = 2
         width = 120
         height = 223

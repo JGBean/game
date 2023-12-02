@@ -3,7 +3,7 @@ from PIL import ImageDraw, ImageFont, Image
 
 class Snow:
     def __init__(self, position, direction):
-        self.speed = 15
+        self.speed = 10
         self.position = position.copy()
         self.direction = direction
         self.state = None

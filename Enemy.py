@@ -8,7 +8,7 @@ class Enemy:
         self.state = 'alive'
         self.position = np.array([spawn_position[0], spawn_position[1]])
         self.center = self.position + np.array([10, 10])
-        self.speed = 8
+        self.speed = 6
         self.hp = 2
         self.last_snow_time = 0
         self.drawmob = Image.open('/home/jeon7263/game/game/res/gstand.png').resize((20, 20))
@@ -20,21 +20,21 @@ class Enemy:
         self.position[1] += random.randint(-self.speed, self.speed)
         self.position[0] += random.randint(-self.speed, self.speed)
 
-        if self.position[0] <= 5:
-            self.position[0] = 5
-        elif self.position[0] >= 235: 
-            self.position[0] = 235
+        if self.position[0] <= 15:
+            self.position[0] = 15
+        elif self.position[0] >= 225: 
+            self.position[0] = 225
 
-        if self.position[1] <= 5:
-            self.position[1] = 5
-        elif self.position[1] >= 120: 
-            self.position[1] = 120
+        if self.position[1] <= 15:
+            self.position[1] = 15
+        elif self.position[1] >= 115: 
+            self.position[1] = 115
 
         self.center = self.position + np.array([10, 10])
     
     def throw_snow(self):
         current_time = time.time()
-        if current_time - self.last_snow_time >= random.uniform(1,3):
+        if current_time - self.last_snow_time >= random.uniform(2,4):
             self.last_snow_time = current_time
             snow = Snow(self.center, 'down')
             return snow
