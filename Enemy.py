@@ -33,10 +33,5 @@ class Enemy:
         self.center = self.position + np.array([10, 10])
     
     def throw_snow(self):
-        current_time = time.time()
-        if current_time - self.last_snow_time >= random.uniform(2,4):
-            self.last_snow_time = current_time
-            snow = Snow(self.center, 'down')
-            return snow
-        
-        else: None
+        snow = Snow(self.center, 'down')
+        return snow
