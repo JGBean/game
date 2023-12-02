@@ -8,7 +8,7 @@ class Bullet:
         self.direction = {'up': False, 'down': False, 'left': False, 'right': False}
         self.state = None
         self.collided = False
-        self.collision_range = 12
+        self.collision_range = 12 # 충돌범위
         self.drawsnow = Image.open('/home/jeon7263/game/game/res/snow.png').resize((10, 10))
         
         if command['up_pressed']:
