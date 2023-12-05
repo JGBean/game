@@ -1,18 +1,18 @@
 from PIL import Image, ImageDraw, ImageFont
-import time
 import random
 import os
 import sys
 import numpy as np
 from Enemy import Enemy
+import time
 from Bullet import Bullet
 from Character import Character
 from Joystick import Joystick
 from Snow import Snow
-import pygame
+import pygame # 소리 넣는데 사용
 
 def restart():
-    os.execl(sys.executable, sys.executable, *sys.argv)
+    os.execl(sys.executable, sys.executable, *sys.argv) # 재시작
 
 def main():
     count = 0
@@ -51,9 +51,9 @@ def main():
     snowImage = Image.open(snow_path).resize((10,10))
 
     stage = 1
-    enemy_counts = {1: 4, 2: 6, 3: 8, 4: 10}
+    enemy_counts = {1: 4, 2: 6, 3: 8, 4: 10} # 각 스테이지 별 적의 수
 
-    def create_enemies(stage):
+    def create_enemies(stage): # 랜덤 위치에 적 생성
         enemies = []
         for i in range(enemy_counts[stage]):
             random_x = random.randint(20, 220)
@@ -70,21 +70,21 @@ def main():
     pressed = False
     joystick.disp.image(start)
 
-    def stage_clear(stage):
+    def stage_clear(stage): # 각 스테이지 클리어시 나타날 화면
         stage_clear = Image.open(background_path).resize((240,240)).convert("RGB")
         stage_cleardraw = ImageDraw.Draw(stage_clear)
         stage_cleardraw.text((70,110),f'Stage {stage} Clear!',(0,0,0), font = fnt)
         joystick.disp.image(stage_clear)
         time.sleep(3)
 
-    def stage_start(stage):
+    def stage_start(stage): # 각 스테이지 시작시 나타날 화면
         stage_start = Image.open(background_path).resize((240,240)).convert("RGB")
         stage_startdraw = ImageDraw.Draw(stage_start)
         stage_startdraw.text((70,110),f'Stage {stage} Start!',(0,0,0), font = fnt)
         joystick.disp.image(stage_start)
         time.sleep(2)
 
-    def Win():
+    def Win(): # 게임 승리 시 나타날 화면
         ending = Image.open(win_path).resize((240, 240))
         endingdraw = ImageDraw.Draw(ending)
         endingdraw.text((70,105),'YOU WIN!',(0,0,0), font = fnt1)
@@ -92,7 +92,7 @@ def main():
         time.sleep(2)
         restart()
 
-    def Lose():
+    def Lose(): # 게임 패배 시 나타날 화면
         ending = Image.open(lose_path).resize((240,240)).convert("RGB")
         endingdraw = ImageDraw.Draw(ending)
         endingdraw.text((70,105),'YOU LOSE!',(0,0,0), font = fnt1)
@@ -102,7 +102,7 @@ def main():
 
     joystick.button_A_prev = False
 
-    while True:  
+    while True:  # A 버튼 누르면 게임 시작 하도록
         if not joystick.button_A.value:
             pressed=True
         elif joystick.button_A.value and pressed:
@@ -144,7 +144,7 @@ def main():
                 pygame.mixer.music.play(0)
             pick_up_snow = False
 
-        if not joystick.button_B.value and joystick.button_B_prev:
+        if not joystick.button_B.value and joystick.button_B_prev: # B 버튼 누르면 pause
             paused = not paused
             if paused:
                 pause_image = image.copy() 
@@ -160,18 +160,18 @@ def main():
         if paused:
             continue           
 
-        for bullet in bullets:
+        for bullet in bullets: # 리스트에 있을 때 충돌 조건 확인
             bullet.collision_check(enemys_list.copy())
             bullet.move()
     
-        for snow in snows:
+        for snow in snows: # 리스트에 있을 때 충돌 조건 확인
             snow.collision_check(character_list.copy())
             snow.move()
 
         image.paste(backgroundImage, (0,0))
 
         
-        for enemy in enemys_list:
+        for enemy in enemys_list: # 적 상황 별 적 이미지
             if enemy.hp == 2:
                 image.paste(enemy.drawmob, (enemy.position[0], enemy.position[1]))
                 enemy.move()
@@ -198,7 +198,7 @@ def main():
                 pygame.mixer.music.load("/home/jeon7263/game/game/res/dead.wav")
                 pygame.mixer.music.play(0)              
 
-        for player in character_list:
+        for player in character_list: # 캐릭터 상황 별 캐릭터 이미지
             if player.hp == 2 and count == 0:
                 image.paste(player.drawplayer, (player.position[0], player.position[1]))
                 player.move(command)
@@ -224,7 +224,7 @@ def main():
                 pygame.mixer.music.play(0)
 
 
-        if all(enemy.hp == 0 for enemy in enemys_list):
+        if all(enemy.hp == 0 for enemy in enemys_list): # 스테이지 클리어 조건 및 승리 조건
             stage_clear(stage)
             stage += 1
             if stage > 4:
@@ -234,16 +234,16 @@ def main():
                 enemys_list = create_enemies(stage)
                 stage_start(stage)
 
-        if all(character.hp == 0 for character in character_list):
+        if all(character.hp == 0 for character in character_list): # 패배 조건
             Lose()
 
-        for bullet in bullets:
+        for bullet in bullets: # 캐릭터가 던지는 눈 표현
             if bullet.state != 'hit':
                 bullet_image = Image.open(snow_path).resize((10, 10))
                 image.paste(bullet_image, (int(bullet.position[0]), int(bullet.position[1]))) 
        
         
-        for snow in snows:
+        for snow in snows: # 적이 던지는 눈 표현
             if snow.state != 'hit' and snow.position[1] < 245:
                 snow_image = Image.open(snow_path).resize((10, 10))
                 image.paste(snow_image, (int(snow.position[0]), int(snow.position[1]))) 

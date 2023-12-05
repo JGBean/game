@@ -32,9 +32,9 @@ class Character:
         if command['right_pressed']:
             self.position[0] += self.speed
             self.position[2] += self.speed
-        self.center = np.array([(self.position[0] + self.position[2]) / 2, (self.position[1] + self.position[3]) / 2])
+        self.center = np.array([(self.position[0] + self.position[2]) / 2, (self.position[1] + self.position[3]) / 2]) # 중앙점 갱신
 
-        if self.position[0] < 5 or self.position[2] < 5:
+        if self.position[0] < 5 or self.position[2] < 5: # 화면 벗어남 방지
             self.position[0] += self.speed
             self.position[2] += self.speed
         elif self.position[0] > 235 or self.position[2] > 235:
@@ -47,4 +47,4 @@ class Character:
             self.position[1] -= self.speed
             self.position[3] -= self.speed
 
-        self.center = np.array([(self.position[0] + self.position[2]) / 2, (self.position[1] + self.position[3]) / 2])
+        self.center = np.array([(self.position[0] + self.position[2]) / 2, (self.position[1] + self.position[3]) / 2]) # 중앙점 갱신
